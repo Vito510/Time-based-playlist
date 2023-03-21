@@ -30,7 +30,7 @@ def subset_sum(numbers, target, partial=[]):
             return r
    
 n = datetime.now()
-target_time = datetime(n.year, n.month, n.day, 10, 50, 0)
+target_time = datetime(n.year, n.month, n.day, 11, 20, 0)
 # target = timedelta(minutes=20, seconds=20).total_seconds()
 target = (target_time - datetime.now()).total_seconds()
 target = round(target,1)
@@ -72,7 +72,7 @@ with open("playlist.m3u", "w", encoding='utf-8') as f:
 subprocess.Popen(["C:\Program Files (x86)\MusicBee\MusicBee.exe",f'{MAIN_PATH}\\playlist.m3u'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=startupinfo, creationflags=subprocess.CREATE_NO_WINDOW)
 
 print("Created playlist")
-print(f"\tEnd time: {target_time}")
+print(f"\tEnd time: {target_time}\n\tLength: {str(timedelta(seconds=target)).split('.')[0]}\n\tMin song length: {timedelta(seconds=MIN_LENGTH)}\n\tMax song length: {timedelta(seconds=MAX_LENGTH)}")
 print(f"\n\tItems:")
 for item in playlist:
     print('\t\t'+item["path"].split("\\")[-1])
