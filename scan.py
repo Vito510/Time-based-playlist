@@ -3,7 +3,12 @@ from rich.progress import track
 from os.path import isdir
 import json
 import audioread
-paths = ["C:\\Users\\Vito\\Music", "D:\\Music"]
+
+paths = input("Input search paths separated with commas [path1,path2]: ").split(",")
+paths = [i.strip() for i in paths]
+
+print(paths)
+
 audio = ["flac","mp3","wav","ogg","m4a","opus","aac"]
 
 data = []
