@@ -19,14 +19,20 @@ type Song struct {
 }
 
 type Config struct {
-	MIN_LENGTH float64 `json:"MIN_LENGTH"`
-	MAX_LENGTH float64 `json:"MAX_LENGTH"`
+	MIN_LENGTH  float64  `json:"MIN_LENGTH"`
+	MAX_LENGTH  float64  `json:"MAX_LENGTH"`
+	FINAL_SONGS []string `json:"FINAL_SONGS"`
 }
 
 func check(e error) {
 	if e != nil {
 		panic(e)
 	}
+}
+
+func random_element(arr []string) string {
+	rand.Seed(time.Now().UnixNano())
+	return arr[rand.Intn(len(arr))]
 }
 
 func shuffle(arr []Song) []Song {
@@ -179,6 +185,15 @@ func test(songs []Song) {
 
 }
 
+func get_song_index(path string, songs []Song) int {
+	for i, v := range songs {
+		if path == v.Path {
+			return i
+		}
+	}
+	return -1
+}
+
 func main() {
 
 	// Read config file
@@ -188,6 +203,8 @@ func main() {
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var config Config
+	var FINAL_SONG_INDEX int
+	var FINAL_SONG string = ""
 
 	json.Unmarshal(byteValue, &config)
 
@@ -210,6 +227,10 @@ func main() {
 	}
 	songs = temp
 
+	if len(config.FINAL_SONGS) > 0 {
+		FINAL_SONG_INDEX = get_song_index(random_element(config.FINAL_SONGS), songs)
+	}
+
 	if len(os.Args) > 1 && os.Args[1] == "test" {
 		test(songs)
 		return
@@ -227,13 +248,29 @@ func main() {
 
 	target := roundFloat(end_target_time.Sub(time.Now()).Seconds(), PRECISION)
 
-	// fmt.Printf("%d:%d | %f\n", hour, minute, target)
+	if FINAL_SONG_INDEX != -1 {
+		if target-songs[FINAL_SONG_INDEX].Duration >= 0 {
+			target -= songs[FINAL_SONG_INDEX].Duration
+			fmt.Printf("\n%f\n", target)
+			target = roundFloat(target, PRECISION)
+			FINAL_SONG = songs[FINAL_SONG_INDEX].Path
+		} else {
+			color.Yellow("Final song will not fit, skipping")
+			FINAL_SONG_INDEX = -1
+		}
+	}
 
 	songs = shuffle(songs)
 	subset_time_start := time.Now()
 	playlist := subset_sum(songs, float64(target), []Song{})
 	subset_time_end := time.Now()
 
+	if len(playlist) == 0 {
+		color.Red("Couldn't fit songs into target time")
+		os.Exit(0)
+	}
+
+	// write to file
 	write_time_start := time.Now()
 	f, err := os.Create("playlist.m3u")
 
@@ -242,6 +279,12 @@ func main() {
 	for _, v := range playlist {
 		f.WriteString(v.Path + "\n")
 	}
+
+	if FINAL_SONG != "" {
+		f.WriteString(FINAL_SONG)
+		playlist = append(playlist, Song{})
+	}
+
 	f.Sync()
 	f.Close()
 	write_time_end := time.Now()

@@ -1,4 +1,8 @@
 {
     "MIN_LENGTH": 100,
-    "MAX_LENGTH": 300
+    "MAX_LENGTH": 300,
+    "FINAL_SONGS": [
+        "C:\\Users\\Vito\\Music\\Outer Wilds OST (.FLAC)\\10. End Times.flac",
+        "C:\\Users\\Vito\\Music\\Outer Wilds OST (.FLAC)\\17. Final Voyage.flac"
+    ]
 }

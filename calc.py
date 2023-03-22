@@ -86,18 +86,18 @@ data = temp
 
 
 
-# for i in range(0,121,5):
-#     print(f"{i:3}: ",end='')
-#     for j in range(10):
-#         target = 60 * i
-#         shuffle(data)
-#         start_time = time.time()
-#         playlist = subset_sum(data, target)
-#         end_time = time.time() - start_time
-#         print(f"{end_time*1000:5.0f} ",end='')
-#     print("")
+for i in range(0,121,5):
+    print(f"{i:3}: ",end='')
+    for j in range(10):
+        target = 60 * i
+        shuffle(data)
+        start_time = time.time()
+        playlist = subset_sum(data, target)
+        end_time = time.time() - start_time
+        print(f"{end_time*1000:5.0f} ",end='')
+    print("")
 
-# exit()
+exit()
 
 shuffle(data)
 playlist = subset_sum(data, target)
