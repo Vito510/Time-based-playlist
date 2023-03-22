@@ -249,8 +249,9 @@ func main() {
 	target := roundFloat(end_target_time.Sub(time.Now()).Seconds(), PRECISION)
 
 	if FINAL_SONG_INDEX != -1 {
-		if target-songs[FINAL_SONG_INDEX].Duration >= config.MAX_LENGTH {
+		if target-songs[FINAL_SONG_INDEX].Duration >= 0 {
 			target -= songs[FINAL_SONG_INDEX].Duration
+			fmt.Printf("\n%f\n", target)
 			target = roundFloat(target, PRECISION)
 			FINAL_SONG = songs[FINAL_SONG_INDEX].Path
 		} else {
@@ -259,12 +260,15 @@ func main() {
 		}
 	}
 
-	fmt.Printf("\n%f\n", target)
-
 	songs = shuffle(songs)
 	subset_time_start := time.Now()
 	playlist := subset_sum(songs, float64(target), []Song{})
 	subset_time_end := time.Now()
+
+	if len(playlist) == 0 {
+		color.Red("Couldn't fit songs into target time")
+		os.Exit(0)
+	}
 
 	// write to file
 	write_time_start := time.Now()
