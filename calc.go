@@ -240,6 +240,7 @@ func main() {
 	var minute int = 0
 
 	for hour+minute == 0 {
+		fmt.Printf("Enter end time [h:m]: ")
 		fmt.Scanf("%d:%d", &hour, &minute)
 	}
 
@@ -267,6 +268,7 @@ func main() {
 
 	if len(playlist) == 0 {
 		color.Red("Couldn't fit songs into target time")
+		time.Sleep(time.Duration(time.Second * 2))
 		os.Exit(0)
 	}
 
@@ -294,5 +296,7 @@ func main() {
 
 	fmt.Printf("\nCreated playlist with %d items\n\nParameters:\n\tMin song length: %f\n\tMax song length: %f", len(playlist), config.MIN_LENGTH, config.MAX_LENGTH)
 	fmt.Printf("\nTime:\n\tSubset: %dms\n\tWrite: %dms", subset_time_end.Sub(subset_time_start).Milliseconds(), write_time_end.Sub(write_time_start).Milliseconds())
+
+	time.Sleep(time.Duration(time.Second * 2))
 
 }
