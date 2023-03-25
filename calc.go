@@ -203,7 +203,7 @@ func main() {
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var config Config
-	var FINAL_SONG_INDEX int
+	var FINAL_SONG_INDEX int = -1
 	var FINAL_SONG string = ""
 
 	json.Unmarshal(byteValue, &config)
